@@ -12,7 +12,9 @@ SQL Structure
 ------------------------------------------------
 
 SELECT *, payload
-FROM EVENTS INTO 'DroppedEvents'
+FROM EVENTS INTO 'DroppedEvents' LIMIT 1000
+START '2020-02-10 18:00'
+STOP '2020-02-08 09:00'
 WHERE action
 ILIKE '%deny%'
 OR
