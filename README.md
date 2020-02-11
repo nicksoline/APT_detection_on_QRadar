@@ -134,3 +134,235 @@ Field 	Indicates basic information that you can query from the database. Example
 Function 	Various functions from string functions to call in more information. Functions work on all fields and databases. Examples of functions include DATEFORMAT, HOSTNAME, and LOWER. 
 
 
+
+
+
+The following table lists the supported logical and comparison operators.
+Table 1. Logical and comparison operators Operator 	Description 	Example
+* 	Multiplies two values and returns the result. 	
+
+SELECT *
+FROM flows 
+WHERE sourceBytes * 1024 < 1 
+Copy
+
+= 	The equal to operator compares two values and returns true if they are equal. 	
+
+SELECT * 
+FROM EVENTS
+WHERE sourceIP = destinationIP 
+Copy
+
+!= 	Compares two values and returns true if they are unequal. 	
+
+SELECT *
+FROM events
+WHERE sourceIP
+!= destinationip
+Copy
+
+< AND <= 	Compares two values and returns true if the value on the left side is less than or equal to, the value on the right side. 	
+
+SELECT *
+FROM flows 
+WHERE sourceBytes < 64 
+AND
+destinationBytes <= 64  
+Copy
+
+> AND >= 	Compares two values and returns true if the value on the left side is greater than or equal to the value on the right side. 	
+
+SELECT * 
+FROM flows 
+WHERE sourceBytes > 64 
+AND
+destinationBytes >= 64
+Copy
+
+/ 	Divides two values and returns the result. 	
+
+SELECT * 
+FROM flows 
+WHERE sourceBytes / 8 > 64 
+Copy
+
++ 	Adds two values and returns the result. 	
+
+SELECT * 
+FROM flows 
+WHERE sourceBytes + 
+destinationBytes < 64 
+Copy
+
+- 	Subtracts one value from another and returns the result. 	
+
+SELECT * 
+FROM flows 
+WHERE sourceBytes - 
+destinationBytes > 0
+Copy
+
+^ 	Takes a value and raises it to the specified power and returns the result. 	
+
+SELECT * 
+FROM flows 
+WHERE sourceBytes ^ 2 < 256
+Copy
+
+% 	Takes the modulo of a value and returns the result. 	
+
+SELECT * 
+FROM flows 
+WHERE sourceBytes % 8 == 7
+Copy
+
+AND 	Takes the left side and right side of a statement and returns true if both are true. 	
+
+SELECT *
+FROM events 
+WHERE (sourceIP = destinationIP)
+AND (sourcePort = destinationPort)
+Copy
+
+BETWEEN (X,Y) 	Takes in a left side and two values and returns true if the left side is between the two values. 	
+
+SELECT * 
+FROM events 
+WHERE magnitude
+BETWEEN 1 AND 5 
+Copy
+
+COLLATE 	Parameter to order by that allows a BCP47 language tag to collate. 	
+
+SELECT * 
+FROM EVENTS ORDER BY
+sourceIP DESC COLLATE 'de-CH' 
+Copy
+
+IN 	Specifies multiple values in a WHERE clause. The IN operator is a shorthand for multiple OR conditions. 	
+
+SELECT *
+FROM EVENTS
+WHERE SourceIP IN ('192.0.2.1', '::1', '198.51.100.0')
+Copy
+
+INTO 	Creates a named cursor that contains results that can be queried at a different time. 	
+
+SELECT * FROM EVENTS INTO
+ 'MyCursor' WHERE....
+Copy
+
+NOT 	Takes in a statement and returns true if the statement evaluates as false. 	
+
+SELECT * FROM EVENTS 
+WHERE NOT 
+(sourceIP = destinationIP) 
+Copy
+
+ILIKE 	Matches if the string passed is LIKE the passed value and is not case sensitive. Use % as a wildcard. 	
+
+SELECT * 
+FROM events WHERE userName 
+ILIKE '%bob%' 
+Copy
+
+IMATCHES 	Matches if the string matches the provided regular expression and is not case sensitive. 	
+
+SELECT * 
+FROM events 
+WHERE userName
+IMATCHES '^.bob.$' 
+Copy
+
+LIMIT 	Limits the number of results to the provided number. 	
+
+SELECT * 
+FROM events LIMIT 100 
+START '2015-10-28 10:00' 
+STOP '2015-10-28 11:00'
+Copy
+
+Note Place the LIMIT clause in front of a START and STOP clause.
+LIKE 	Matches if the string passed is LIKE the passed value but is case sensitive. Use % as a wildcard. 	
+
+SELECT * 
+FROM events WHERE userName 
+LIKE '%bob%' 
+Copy
+
+MATCHES 	Matches if the string matches the provided regular expression. 	
+
+SELECT * 
+FROM events 
+WHERE userName MATCHES
+'^.bob.$' 
+Copy
+
+NOT NULL 	Takes in a value and returns true if the value is not null. 	
+
+SELECT *
+FROM events 
+WHERE userName 
+IS NOT NULL
+Copy
+
+OR 	Takes the left side of a statement and the right side of a statement and returns true if either side is true. 	
+
+SELECT *
+FROM events 
+WHERE (sourceIP = destinationIP)
+OR (sourcePort = destinationPort)
+Copy
+
+TEXT SEARCH 	
+
+Full-text search for the passed value.
+
+TEXT SEARCH is valid with AND operators. You can't use TEXT SEARCH with OR or other operators; otherwise, you get a syntax error.
+
+Place TEXT SEARCH in the first position of the WHERE clause.
+
+You can also do full-text searches by using the Quick filter in the QRadar® user interface. For information about Quick filter functions, see the IBM® QRadar User Guide.
+	
+
+SELECT * 
+FROM events 
+WHERE TEXT SEARCH 'firewall'
+AND sourceip='192.168.1.1' 
+Copy
+
+SELECT sourceip,url 
+FROM events 
+WHERE TEXT SEARCH 
+'download.cdn.mozilla.net' 
+AND sourceip='192.168.1.1' 
+START '2015-01-30 16:10:12' 
+STOP '2015-02-22 17:10:22'
+Copy
+
+Examples of logical and comparative operators
+
+    To find events that are not parsed, type the following query:
+
+    SELECT * FROM events 
+    WHERE payload = 'false'
+    Copy
+
+    To find events that return an offense and have a specific source IP address, type the following query:
+
+    SELECT * FROM events 
+    WHERE sourceIP = '192.0.2.0' 
+    AND
+    hasOffense = 'true'
+    Copy
+
+    To find events that include the text "firewall", type the following query:
+
+    SELECT QIDNAME(qid) 
+    AS EventName, 
+    * FROM events 
+    WHERE TEXT SEARCH 'firewall'
+    
+    
+    
+    
