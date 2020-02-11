@@ -1,0 +1,19 @@
+/* 
+SQL Structure
+[SELECT *, column_name, column_name]
+[FROM table_name]
+[WHERE search clauses]
+[GROUP BY column_reference*]
+[HAVING clause]
+[ORDER BY column_reference*]
+[LIMIT numeric_value] 
+[TIMEFRAME]
+*/
+------------------------------------------------
+
+SELECT *, payload
+FROM EVENTS INTO 'DroppedEvents'
+WHERE action
+ILIKE '%deny%'
+OR
+ILIKE '%drop%'
